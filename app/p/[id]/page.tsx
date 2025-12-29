@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { kv, getPasteKey } from '@/lib/kv'
+import { kv, getPasteKey, kvWithTimeout } from '@/lib/kv'
 import { isPasteAvailable } from '@/lib/paste'
 import { escapeHtml } from '@/lib/utils'
 import type { Paste } from '@/types/paste'
@@ -13,15 +13,29 @@ interface PageProps {
 async function getPaste(id: string): Promise<Paste | null> {
   try {
     const key = getPasteKey(id)
-    const pasteData = await kv.get<string>(key)
+    const pasteData = await kvWithTimeout(
+      () => kv.get<string>(key),
+      5000 // 5 second timeout
+    )
 
     if (!pasteData) {
       return null
     }
 
-    const paste: Paste = JSON.parse(pasteData)
-    return paste
+    try {
+      const paste: Paste = JSON.parse(pasteData)
+      // Validate paste structure
+      if (!paste.id || typeof paste.content !== 'string') {
+        console.error('Invalid paste structure:', { id: paste?.id })
+        return null
+      }
+      return paste
+    } catch (parseError) {
+      console.error('Failed to parse paste data:', parseError)
+      return null
+    }
   } catch (error) {
+    console.error('Error fetching paste:', error)
     return null
   }
 }

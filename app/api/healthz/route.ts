@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server'
-import { kv } from '@/lib/kv'
+import { kv, kvWithTimeout } from '@/lib/kv'
 
 export async function GET() {
   try {
-    // Test KV connection by performing a simple read operation
+    // Test KV connection by performing a simple read operation with timeout
     // Getting a non-existent key returns null without error if KV is accessible
-    await kv.get('__health_check__')
+    await kvWithTimeout(
+      () => kv.get('__health_check__'),
+      3000 // 3 second timeout for health check
+    )
     
     // Return success response with explicit Content-Type
     return NextResponse.json(
@@ -18,8 +21,9 @@ export async function GET() {
       }
     )
   } catch (error) {
-    // If KV is not accessible (e.g., missing env vars, connection error),
+    // If KV is not accessible (e.g., missing env vars, connection error, timeout),
     // return ok: false but still 200 status as per requirements
+    console.error('Health check failed:', error)
     return NextResponse.json(
       { ok: false },
       {

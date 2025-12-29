@@ -4,9 +4,11 @@ import type { CreatePasteRequest, Paste } from '@/types/paste'
 import { getCurrentTime } from './utils'
 
 export const createPasteSchema = z.object({
-  content: z.string().min(1, 'Content must be a non-empty string'),
-  ttl_seconds: z.number().int().min(1).optional(),
-  max_views: z.number().int().min(1).optional(),
+  content: z.string()
+    .min(1, 'Content must be a non-empty string')
+    .max(10 * 1024 * 1024, 'Content cannot exceed 10MB'), // 10MB limit
+  ttl_seconds: z.number().int().min(1).max(31536000).optional(), // Max 1 year (365 days)
+  max_views: z.number().int().min(1).max(1000000).optional(), // Max 1M views
 })
 
 export function generatePasteId(): string {
