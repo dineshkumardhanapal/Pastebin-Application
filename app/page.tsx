@@ -3,6 +3,18 @@
 import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import { 
+  HiOutlineClock, 
+  HiOutlineEye, 
+  HiOutlineExclamationTriangle,
+  HiOutlineSparkles,
+  HiOutlineCheckCircle,
+  HiOutlineClipboard,
+  HiOutlineBolt,
+  HiOutlineLockClosed,
+  HiOutlineAdjustmentsHorizontal,
+  HiOutlineArrowPath
+} from 'react-icons/hi2'
 
 export default function Home() {
   const [content, setContent] = useState('')
@@ -287,7 +299,7 @@ export default function Home() {
                     color: '#374151',
                     fontSize: '0.95rem'
                   }}>
-                    <span style={{ fontSize: '1.25rem' }}>⏱️</span>
+                    <HiOutlineClock style={{ fontSize: '1.25rem', color: '#2D8CFF' }} />
                     TTL (seconds)
                   </label>
                   <input
@@ -334,7 +346,7 @@ export default function Home() {
                     color: '#374151',
                     fontSize: '0.95rem'
                   }}>
-                    <span style={{ fontSize: '1.25rem' }}>👁️</span>
+                    <HiOutlineEye style={{ fontSize: '1.25rem', color: '#2D8CFF' }} />
                     Max Views
                   </label>
                   <input
@@ -379,7 +391,7 @@ export default function Home() {
                   gap: '0.75rem',
                   animation: 'slideIn 0.3s ease-out'
                 }}>
-                  <span style={{ fontSize: '1.5rem' }}>⚠️</span>
+                  <HiOutlineExclamationTriangle style={{ fontSize: '1.5rem', flexShrink: 0 }} />
                   <span style={{ fontWeight: '500' }}>{error}</span>
                 </div>
               )}
@@ -409,12 +421,16 @@ export default function Home() {
               >
                 {loading ? (
                   <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                    <span style={{ animation: 'pulse 1.5s ease-in-out infinite' }}>⏳</span>
+                    <HiOutlineArrowPath style={{ 
+                      animation: 'spin 1s linear infinite',
+                      fontSize: '1.1rem'
+                    }} />
                     Creating Paste...
                   </span>
                 ) : (
                   <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                    ✨ Create Paste
+                    <HiOutlineSparkles style={{ fontSize: '1.1rem' }} />
+                    Create Paste
                   </span>
                 )}
               </button>
@@ -448,7 +464,7 @@ export default function Home() {
                   fontSize: '1.5rem',
                   boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
                 }}>
-                  ✅
+                  <HiOutlineCheckCircle style={{ color: '#fff', fontSize: '1.75rem' }} />
                 </div>
                 <h2 style={{
                   fontSize: '1.75rem',
@@ -508,7 +524,17 @@ export default function Home() {
                     letterSpacing: '-0.01em'
                   }}
                 >
-                  {copied ? '✓ Copied!' : '📋 Copy URL'}
+                  {copied ? (
+                    <>
+                      <HiOutlineCheckCircle style={{ marginRight: '0.5rem' }} />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <HiOutlineClipboard style={{ marginRight: '0.5rem' }} />
+                      Copy URL
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -523,24 +549,26 @@ export default function Home() {
           }}>
             {[
               {
-                icon: '⚡',
+                icon: HiOutlineBolt,
                 title: 'Fast & Reliable',
                 description: 'Built on Next.js and Redis for lightning-fast performance and 99.9% uptime.',
                 iconBg: '#2D8CFF'
               },
               {
-                icon: '🔒',
+                icon: HiOutlineLockClosed,
                 title: 'Secure & Private',
                 description: 'Your pastes are protected with XSS prevention and optional expiry for sensitive content.',
                 iconBg: '#1E6FD9'
               },
               {
-                icon: '🎯',
+                icon: HiOutlineAdjustmentsHorizontal,
                 title: 'Flexible Options',
                 description: 'Set time-based expiry or view limits to control how long your pastes are accessible.',
                 iconBg: '#0D5FC7'
               }
-            ].map((feature, index) => (
+            ].map((feature, index) => {
+              const IconComponent = feature.icon
+              return (
               <div 
                 key={index}
                 style={{
@@ -574,7 +602,7 @@ export default function Home() {
                   marginBottom: '1.5rem',
                   boxShadow: `0 8px 16px ${feature.iconBg}40`
                 }}>
-                  {feature.icon}
+                  <IconComponent style={{ color: '#fff', fontSize: '2rem' }} />
                 </div>
                 <h3 style={{
                   fontSize: '1.5rem',
@@ -594,7 +622,8 @@ export default function Home() {
                   {feature.description}
                 </p>
               </div>
-            ))}
+              )
+            })}
           </div>
         </section>
       </main>

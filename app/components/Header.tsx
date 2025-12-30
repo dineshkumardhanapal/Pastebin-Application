@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { HiOutlineClipboard, HiOutlineHome, HiOutlineArrowTopRightOnSquare } from 'react-icons/hi2'
 
 export default function Header() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
@@ -42,14 +43,14 @@ export default function Header() {
           onFocus={() => setHoveredLink('logo')}
           onBlur={() => setHoveredLink(null)}
         >
-          <span style={{ 
-            fontSize: '2rem',
-            filter: hoveredLink === 'logo' ? 'drop-shadow(0 4px 8px rgba(45, 140, 255, 0.4))' : 'none',
-            transition: 'all 0.3s ease',
-            transform: hoveredLink === 'logo' ? 'rotate(10deg) scale(1.1)' : 'rotate(0) scale(1)'
-          }}>
-            📋
-          </span>
+          <HiOutlineClipboard 
+            style={{ 
+              fontSize: '2rem',
+              filter: hoveredLink === 'logo' ? 'drop-shadow(0 4px 8px rgba(45, 140, 255, 0.4))' : 'none',
+              transition: 'all 0.3s ease',
+              transform: hoveredLink === 'logo' ? 'rotate(10deg) scale(1.1)' : 'rotate(0) scale(1)'
+            }}
+          />
           <span>Pastebin</span>
         </Link>
         <nav style={{
@@ -108,11 +109,11 @@ export default function Header() {
             onBlur={() => setHoveredLink(null)}
           >
             <span>GitHub</span>
-            <span style={{ 
+            <HiOutlineArrowTopRightOnSquare style={{ 
               fontSize: '0.875rem',
               transform: hoveredLink === 'github' ? 'translateX(4px)' : 'translateX(0)',
               transition: 'transform 0.3s ease'
-            }}>↗</span>
+            }} />
             {hoveredLink === 'github' && (
               <span style={{
                 position: 'absolute',

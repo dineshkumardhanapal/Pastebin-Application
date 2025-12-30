@@ -1,5 +1,12 @@
 'use client'
 
+import { 
+  HiOutlineClock, 
+  HiOutlineEye, 
+  HiOutlineLockClosed, 
+  HiOutlineBolt 
+} from 'react-icons/hi2'
+
 export default function Footer() {
   const currentYear = new Date().getFullYear()
   
@@ -52,10 +59,22 @@ export default function Footer() {
               fontSize: '0.9rem',
               lineHeight: '2'
             }}>
-              <li>✨ Time-based expiry (TTL)</li>
-              <li>👁️ View count limits</li>
-              <li>🔒 Secure & private</li>
-              <li>⚡ Fast & reliable</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <HiOutlineClock style={{ color: '#2D8CFF', fontSize: '1rem' }} />
+                Time-based expiry (TTL)
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <HiOutlineEye style={{ color: '#2D8CFF', fontSize: '1rem' }} />
+                View count limits
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <HiOutlineLockClosed style={{ color: '#2D8CFF', fontSize: '1rem' }} />
+                Secure & private
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <HiOutlineBolt style={{ color: '#2D8CFF', fontSize: '1rem' }} />
+                Fast & reliable
+              </li>
             </ul>
           </div>
           

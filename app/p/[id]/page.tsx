@@ -3,6 +3,7 @@ import { kv, getPasteKey, kvWithTimeout } from '@/lib/kv'
 import { isPasteAvailable } from '@/lib/paste'
 import { escapeHtml } from '@/lib/utils'
 import type { Paste } from '@/types/paste'
+import { HiOutlineClipboard, HiOutlineArrowLeft } from 'react-icons/hi2'
 
 interface PageProps {
   params: {
@@ -109,7 +110,7 @@ export default async function PastePage({ params }: PageProps) {
               fontSize: '1.5rem',
               boxShadow: '0 8px 16px rgba(45, 140, 255, 0.3)'
             }}>
-              📋
+              <HiOutlineClipboard style={{ color: '#fff', fontSize: '1.75rem' }} />
             </div>
           </div>
           
@@ -200,7 +201,8 @@ export default async function PastePage({ params }: PageProps) {
                 gap: '0.5rem'
               }}
             >
-              ← Create New Paste
+              <HiOutlineArrowLeft style={{ fontSize: '1.1rem' }} />
+              Create New Paste
             </a>
           </div>
         </div>
