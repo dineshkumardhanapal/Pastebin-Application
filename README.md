@@ -22,13 +22,13 @@ A simple pastebin-like application built with Next.js that allows users to creat
 
 - **Next.js 14+** with App Router
 - **TypeScript** for type safety
-- **Vercel KV** (Redis) for persistence
+- **Redis** for persistence (via `redis` package)
 - **Zod** for input validation
 
 ## Prerequisites
 
 - Node.js 18+ installed
-- A Vercel KV database (or Redis instance)
+- A Redis database (Redis Cloud, Upstash, or self-hosted)
 - npm or yarn package manager
 
 ## Local Setup
@@ -48,15 +48,25 @@ A simple pastebin-like application built with Next.js that allows users to creat
    
    Create a `.env.local` file in the root directory with the following variables:
    ```env
-   KV_URL=your_vercel_kv_url
-   KV_REST_API_URL=your_vercel_kv_rest_api_url
-   KV_REST_API_TOKEN=your_vercel_kv_rest_api_token
+   REDIS_URL=redis://your-redis-host:6379
    ```
    
-   For local development with a Redis instance, you can use:
+   Or if you prefer using `KV_URL` (for backward compatibility):
    ```env
-   KV_URL=redis://localhost:6379
+   KV_URL=redis://your-redis-host:6379
    ```
+   
+   For local development with a Redis instance:
+   ```env
+   REDIS_URL=redis://localhost:6379
+   ```
+   
+   For Redis with authentication:
+   ```env
+   REDIS_URL=redis://:password@your-redis-host:6379
+   ```
+   
+   For Redis Cloud, Upstash, or other providers, use their provided connection string.
 
 4. **Run the development server**
    ```bash
@@ -100,19 +110,20 @@ A simple pastebin-like application built with Next.js that allows users to creat
 
 ## Persistence Layer
 
-This application uses **Vercel KV** (a Redis-based key-value store) as its persistence layer.
+This application uses **Redis** as its persistence layer via the official `redis` Node.js client.
 
-### Why Vercel KV?
+### Why Redis?
 
-- **Serverless-friendly**: Works seamlessly with Vercel's serverless functions
 - **Fast**: In-memory storage with sub-millisecond latency
 - **Atomic operations**: Supports atomic increment operations for view counting
 - **TTL support**: Built-in time-to-live functionality for automatic expiry
 - **Scalable**: Handles high concurrency without additional configuration
+- **Flexible**: Works with any Redis provider (Redis Cloud, Upstash, self-hosted, etc.)
+- **Serverless-friendly**: Connection pooling and automatic reconnection
 
 ### Data Structure
 
-Pastes are stored in Vercel KV with the key format: `paste:{id}`
+Pastes are stored in Redis with the key format: `paste:{id}`
 
 Each paste contains:
 - `id`: Unique identifier (UUID v4)
@@ -199,10 +210,10 @@ curl -H "x-test-now-ms: 1609459200000" https://your-app.vercel.app/api/pastes/:i
    - Click "New Project"
    - Import your Git repository
 
-3. **Set up Vercel KV**
-   - In your Vercel project, go to Storage
-   - Create a new KV database
-   - The environment variables will be automatically configured
+3. **Set up Redis**
+   - Choose a Redis provider (Redis Cloud, Upstash, or self-hosted)
+   - Get your Redis connection URL
+   - Add `REDIS_URL` environment variable in Vercel project settings
 
 4. **Deploy**
    - Vercel will automatically deploy on every push to your main branch
@@ -211,11 +222,12 @@ curl -H "x-test-now-ms: 1609459200000" https://your-app.vercel.app/api/pastes/:i
 ### Environment Variables for Production
 
 Ensure these are set in your Vercel project settings:
-- `KV_URL`
-- `KV_REST_API_URL`
-- `KV_REST_API_TOKEN`
+- `REDIS_URL` (or `KV_URL` for backward compatibility)
 
-These are automatically configured when you create a Vercel KV database.
+Example Redis URLs:
+- Redis Cloud: `redis://default:password@redis-12345.c1.us-east-1-1.ec2.cloud.redislabs.com:12345`
+- Upstash: `rediss://default:password@usw1-xxx.upstash.io:6379`
+- Self-hosted: `redis://localhost:6379` or `redis://:password@host:6379`
 
 ## Error Handling
 

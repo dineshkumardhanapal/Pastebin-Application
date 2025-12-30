@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     // Store in KV with TTL if provided (with timeout)
     try {
       if (ttl_seconds) {
-        // Set KV TTL to match the paste TTL (in seconds)
+        // Set Redis TTL to match the paste TTL (in seconds)
         await kvWithTimeout(
           () => kv.setex(key, ttl_seconds, JSON.stringify(paste)),
           5000
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         )
       }
     } catch (kvError) {
-      console.error('KV storage error:', kvError)
+      console.error('Redis storage error:', kvError)
       return NextResponse.json(
         { error: 'Failed to create paste. Please try again.' },
         { status: 503 }
