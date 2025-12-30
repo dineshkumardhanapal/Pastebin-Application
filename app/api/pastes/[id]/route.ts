@@ -43,8 +43,8 @@ export async function GET(
       )
     }
 
-    // Check if paste is expired or view limit exceeded BEFORE incrementing
-    if (isPasteExpired(paste) || isPasteViewLimitExceeded(paste)) {
+    // Check if paste is expired BEFORE incrementing
+    if (isPasteExpired(paste)) {
       return NextResponse.json(
         { error: 'Paste not found' },
         { status: 404 }
@@ -56,7 +56,22 @@ export async function GET(
     let newViewCount: number
     
     try {
-      // Try atomic increment first (kv.incr returns a Promise<number>)
+      // Get current view count from atomic counter (or 0 if doesn't exist)
+      const currentCounterValue = await kvWithTimeout(
+        () => kv.get<string>(viewCountKey),
+        5000
+      )
+      const currentCount = currentCounterValue ? parseInt(currentCounterValue, 10) : paste.viewCount
+      
+      // Check view limit BEFORE incrementing (using current count)
+      if (paste.maxViews !== null && currentCount >= paste.maxViews) {
+        return NextResponse.json(
+          { error: 'Paste not found' },
+          { status: 404 }
+        )
+      }
+      
+      // Atomic increment
       newViewCount = await kvWithTimeout(
         async () => {
           const result = await kv.incr(viewCountKey)
@@ -65,7 +80,7 @@ export async function GET(
         5000
       )
       
-      // If this is the first view, initialize the counter
+      // If this is the first view, initialize the counter with paste TTL
       if (newViewCount === 1 && paste.viewCount === 0) {
         // Set expiry on the counter if paste has TTL
         if (paste.expiresAt) {
@@ -78,7 +93,7 @@ export async function GET(
         }
       }
       
-      // Update view count in paste object
+      // Update view count in paste object for consistency
       paste.viewCount = newViewCount
       
       // Update the paste with new view count (with timeout)
@@ -89,16 +104,26 @@ export async function GET(
     } catch (kvError) {
       // Fallback to non-atomic increment if INCR fails
       console.warn('Atomic increment failed, using fallback:', kvError)
+      
+      // Check limit before incrementing in fallback
+      if (paste.maxViews !== null && paste.viewCount >= paste.maxViews) {
+        return NextResponse.json(
+          { error: 'Paste not found' },
+          { status: 404 }
+        )
+      }
+      
       paste.viewCount += 1
+      newViewCount = paste.viewCount
+      
       await kvWithTimeout(
         () => kv.set(key, JSON.stringify(paste)),
         5000
       )
-      newViewCount = paste.viewCount
     }
 
-    // Check again after incrementing (in case we just hit the limit)
-    if (!isPasteAvailable(paste)) {
+    // Final check after incrementing (in case we just hit the limit)
+    if (paste.maxViews !== null && newViewCount > paste.maxViews) {
       return NextResponse.json(
         { error: 'Paste not found' },
         { status: 404 }

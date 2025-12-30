@@ -12,6 +12,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Skip rate limiting in TEST_MODE to allow automated tests
+  if (process.env.TEST_MODE === '1') {
+    return NextResponse.next()
+  }
+
   // Only apply rate limiting to API routes
   if (!request.nextUrl.pathname.startsWith('/api/')) {
     return NextResponse.next()

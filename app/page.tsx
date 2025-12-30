@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
 
@@ -12,6 +12,11 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [pasteUrl, setPasteUrl] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [charCount, setCharCount] = useState(0)
+
+  useEffect(() => {
+    setCharCount(content.length)
+  }, [content])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,7 +80,6 @@ export default function Home() {
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       } catch (err) {
-        // Fallback for older browsers
         const textArea = document.createElement('textarea')
         textArea.value = pasteUrl
         document.body.appendChild(textArea)
@@ -86,6 +90,12 @@ export default function Home() {
         setTimeout(() => setCopied(false), 2000)
       }
     }
+  }
+
+  const formatCharCount = (count: number) => {
+    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`
+    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`
+    return count.toString()
   }
 
   return (
@@ -99,28 +109,55 @@ export default function Home() {
       <main style={{ flex: 1 }}>
         {/* Hero Section */}
         <section style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+          backgroundSize: '200% 200%',
+          animation: 'gradient 15s ease infinite',
           color: '#fff',
-          padding: '4rem 2rem',
-          textAlign: 'center'
+          padding: '5rem 2rem',
+          textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
+          <style>{`
+            @keyframes gradient {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+          `}</style>
           <div style={{
-            maxWidth: '800px',
-            margin: '0 auto'
+            maxWidth: '900px',
+            margin: '0 auto',
+            position: 'relative',
+            zIndex: 1
           }}>
             <h1 style={{
-              fontSize: '3rem',
-              fontWeight: '700',
-              marginBottom: '1rem',
-              lineHeight: '1.2'
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              fontWeight: '800',
+              marginBottom: '1.5rem',
+              lineHeight: '1.1',
+              letterSpacing: '-0.02em',
+              textShadow: '0 4px 20px rgba(0, 0, 0, 0.2)'
             }}>
               Share Your Code & Text
+              <br />
+              <span style={{ 
+                background: 'linear-gradient(90deg, #fff, #f0f0f0)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                Instantly
+              </span>
             </h1>
             <p style={{
-              fontSize: '1.25rem',
-              marginBottom: '2rem',
+              fontSize: 'clamp(1rem, 2vw, 1.35rem)',
+              marginBottom: '2.5rem',
               opacity: 0.95,
-              lineHeight: '1.6'
+              lineHeight: '1.7',
+              fontWeight: '400',
+              maxWidth: '700px',
+              margin: '0 auto 2.5rem'
             }}>
               Create secure, shareable pastes with optional expiry and view limits. 
               Fast, simple, and reliable.
@@ -130,63 +167,99 @@ export default function Home() {
 
         {/* Main Content */}
         <section style={{
-          maxWidth: '900px',
-          margin: '-3rem auto 4rem',
+          maxWidth: '1000px',
+          margin: '-4rem auto 4rem',
           padding: '0 2rem',
           position: 'relative',
           zIndex: 10
         }}>
           <div style={{
-            backgroundColor: '#fff',
-            borderRadius: '12px',
-            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
-            padding: '2.5rem',
-            marginBottom: '3rem'
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '24px',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
+            padding: '3rem',
+            marginBottom: '3rem',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            animation: 'fadeIn 0.6s ease-out'
           }}>
 
-            <h2 style={{
-              fontSize: '1.75rem',
-              fontWeight: '600',
-              marginBottom: '0.5rem',
-              color: '#1f2937'
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              marginBottom: '2rem'
             }}>
-              Create New Paste
-            </h2>
-            <p style={{
-              color: '#6b7280',
-              marginBottom: '2rem',
-              fontSize: '0.95rem'
-            }}>
-              Paste your text below and configure optional settings
-            </p>
+              <div style={{
+                width: '4px',
+                height: '40px',
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                borderRadius: '2px'
+              }} />
+              <div>
+                <h2 style={{
+                  fontSize: '2rem',
+                  fontWeight: '700',
+                  marginBottom: '0.25rem',
+                  color: '#1a1a1a',
+                  letterSpacing: '-0.01em'
+                }}>
+                  Create New Paste
+                </h2>
+                <p style={{
+                  color: '#6b7280',
+                  fontSize: '0.95rem',
+                  fontWeight: '400'
+                }}>
+                  Paste your text below and configure optional settings
+                </p>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit}>
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label htmlFor="content" style={{
-                  display: 'block',
-                  marginBottom: '0.5rem',
-                  fontWeight: '600',
-                  color: '#374151',
-                  fontSize: '0.95rem'
+              <div style={{ marginBottom: '2rem' }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '0.75rem'
                 }}>
-                  Content <span style={{ color: '#ef4444' }}>*</span>
-                </label>
+                  <label htmlFor="content" style={{
+                    display: 'block',
+                    fontWeight: '600',
+                    color: '#374151',
+                    fontSize: '1rem',
+                    letterSpacing: '-0.01em'
+                  }}>
+                    Content <span style={{ color: '#ef4444', fontWeight: '700' }}>*</span>
+                  </label>
+                  <span style={{
+                    fontSize: '0.875rem',
+                    color: charCount > 0 ? '#667eea' : '#9ca3af',
+                    fontWeight: '500',
+                    transition: 'color 0.2s ease'
+                  }}>
+                    {formatCharCount(charCount)} characters
+                  </span>
+                </div>
                 <textarea
                   id="content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   required
-                  rows={12}
+                  rows={14}
                   style={{
                     width: '100%',
-                    padding: '1rem',
+                    padding: '1.25rem',
                     border: '2px solid #e5e7eb',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontFamily: 'Monaco, "Courier New", monospace',
+                    borderRadius: '12px',
+                    fontSize: '15px',
+                    fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace',
                     resize: 'vertical',
-                    backgroundColor: '#fafafa',
-                    lineHeight: '1.6'
+                    background: 'linear-gradient(to bottom, #fafafa, #ffffff)',
+                    lineHeight: '1.7',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    fontWeight: '400'
                   }}
                   placeholder="Paste your text, code, or any content here..."
                 />
@@ -194,19 +267,28 @@ export default function Home() {
 
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '1rem',
-                marginBottom: '1.5rem'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '1.5rem',
+                marginBottom: '2rem'
               }}>
-                <div>
+                <div style={{
+                  padding: '1.5rem',
+                  background: 'linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)',
+                  borderRadius: '16px',
+                  border: '2px solid #e5e7eb',
+                  transition: 'all 0.3s ease'
+                }}>
                   <label htmlFor="ttl" style={{
-                    display: 'block',
-                    marginBottom: '0.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    marginBottom: '0.75rem',
                     fontWeight: '600',
                     color: '#374151',
                     fontSize: '0.95rem'
                   }}>
-                    ⏱️ TTL (seconds)
+                    <span style={{ fontSize: '1.25rem' }}>⏱️</span>
+                    TTL (seconds)
                   </label>
                   <input
                     type="number"
@@ -216,32 +298,44 @@ export default function Home() {
                     min="1"
                     style={{
                       width: '100%',
-                      padding: '0.75rem',
+                      padding: '0.875rem',
                       border: '2px solid #e5e7eb',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      backgroundColor: '#fafafa'
+                      borderRadius: '10px',
+                      fontSize: '15px',
+                      backgroundColor: '#fff',
+                      fontWeight: '500',
+                      transition: 'all 0.3s ease'
                     }}
                     placeholder="e.g., 3600"
                   />
                   <p style={{
-                    fontSize: '0.75rem',
+                    fontSize: '0.8rem',
                     color: '#9ca3af',
-                    marginTop: '0.25rem'
+                    marginTop: '0.5rem',
+                    lineHeight: '1.5'
                   }}>
-                    Optional: Auto-delete after seconds
+                    Auto-delete after specified seconds
                   </p>
                 </div>
 
-                <div>
+                <div style={{
+                  padding: '1.5rem',
+                  background: 'linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)',
+                  borderRadius: '16px',
+                  border: '2px solid #e5e7eb',
+                  transition: 'all 0.3s ease'
+                }}>
                   <label htmlFor="maxViews" style={{
-                    display: 'block',
-                    marginBottom: '0.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    marginBottom: '0.75rem',
                     fontWeight: '600',
                     color: '#374151',
                     fontSize: '0.95rem'
                   }}>
-                    👁️ Max Views
+                    <span style={{ fontSize: '1.25rem' }}>👁️</span>
+                    Max Views
                   </label>
                   <input
                     type="number"
@@ -251,38 +345,42 @@ export default function Home() {
                     min="1"
                     style={{
                       width: '100%',
-                      padding: '0.75rem',
+                      padding: '0.875rem',
                       border: '2px solid #e5e7eb',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      backgroundColor: '#fafafa'
+                      borderRadius: '10px',
+                      fontSize: '15px',
+                      backgroundColor: '#fff',
+                      fontWeight: '500',
+                      transition: 'all 0.3s ease'
                     }}
                     placeholder="e.g., 10"
                   />
                   <p style={{
-                    fontSize: '0.75rem',
+                    fontSize: '0.8rem',
                     color: '#9ca3af',
-                    marginTop: '0.25rem'
+                    marginTop: '0.5rem',
+                    lineHeight: '1.5'
                   }}>
-                    Optional: Limit view count
+                    Limit the number of views
                   </p>
                 </div>
               </div>
 
               {error && (
                 <div style={{
-                  padding: '1rem',
-                  backgroundColor: '#fef2f2',
+                  padding: '1.25rem',
+                  background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
                   border: '2px solid #fecaca',
-                  borderRadius: '8px',
+                  borderRadius: '12px',
                   color: '#dc2626',
                   marginBottom: '1.5rem',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem'
+                  gap: '0.75rem',
+                  animation: 'slideIn 0.3s ease-out'
                 }}>
-                  <span>⚠️</span>
-                  <span>{error}</span>
+                  <span style={{ fontSize: '1.5rem' }}>⚠️</span>
+                  <span style={{ fontWeight: '500' }}>{error}</span>
                 </div>
               )}
 
@@ -291,56 +389,87 @@ export default function Home() {
                 disabled={loading}
                 style={{
                   width: '100%',
-                  padding: '1rem',
-                  backgroundColor: loading ? '#9ca3af' : '#667eea',
+                  padding: '1.25rem',
+                  background: loading 
+                    ? 'linear-gradient(135deg, #9ca3af, #6b7280)' 
+                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                   color: '#fff',
                   border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '1rem',
+                  borderRadius: '12px',
+                  fontSize: '1.1rem',
                   fontWeight: '600',
                   cursor: loading ? 'not-allowed' : 'pointer',
-                  boxShadow: loading ? 'none' : '0 4px 6px rgba(102, 126, 234, 0.3)'
+                  boxShadow: loading 
+                    ? 'none' 
+                    : '0 8px 24px rgba(102, 126, 234, 0.4)',
+                  letterSpacing: '-0.01em',
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}
               >
-                {loading ? '⏳ Creating Paste...' : '✨ Create Paste'}
+                {loading ? (
+                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                    <span style={{ animation: 'pulse 1.5s ease-in-out infinite' }}>⏳</span>
+                    Creating Paste...
+                  </span>
+                ) : (
+                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                    ✨ Create Paste
+                  </span>
+                )}
               </button>
             </form>
           </div>
 
           {pasteUrl && (
             <div style={{
-              backgroundColor: '#f0fdf4',
+              background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
               border: '2px solid #86efac',
-              borderRadius: '12px',
-              padding: '2rem',
+              borderRadius: '20px',
+              padding: '2.5rem',
               marginBottom: '2rem',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
+              boxShadow: '0 10px 30px rgba(34, 197, 94, 0.2)',
+              animation: 'fadeIn 0.5s ease-out'
             }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                marginBottom: '1rem'
+                gap: '0.75rem',
+                marginBottom: '1.25rem'
               }}>
-                <span style={{ fontSize: '1.5rem' }}>✅</span>
-                <h2 style={{
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   fontSize: '1.5rem',
-                  fontWeight: '600',
-                  color: '#166534'
+                  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+                }}>
+                  ✅
+                </div>
+                <h2 style={{
+                  fontSize: '1.75rem',
+                  fontWeight: '700',
+                  color: '#166534',
+                  letterSpacing: '-0.01em'
                 }}>
                   Paste Created Successfully!
                 </h2>
               </div>
               <p style={{
-                marginBottom: '1rem',
+                marginBottom: '1.25rem',
                 color: '#374151',
-                fontWeight: '500'
+                fontWeight: '500',
+                fontSize: '1rem'
               }}>
                 Share this URL:
               </p>
               <div style={{
                 display: 'flex',
-                gap: '0.75rem',
+                gap: '1rem',
                 alignItems: 'stretch'
               }}>
                 <input
@@ -349,31 +478,37 @@ export default function Home() {
                   readOnly
                   style={{
                     flex: 1,
-                    padding: '0.875rem 1rem',
+                    padding: '1rem 1.25rem',
                     border: '2px solid #86efac',
-                    borderRadius: '8px',
-                    fontSize: '14px',
+                    borderRadius: '12px',
+                    fontSize: '15px',
                     backgroundColor: '#fff',
-                    fontFamily: 'monospace',
-                    color: '#1f2937'
+                    fontFamily: '"JetBrains Mono", monospace',
+                    color: '#1f2937',
+                    fontWeight: '500',
+                    boxShadow: '0 2px 8px rgba(34, 197, 94, 0.1)'
                   }}
                 />
                 <button
                   onClick={copyToClipboard}
                   style={{
-                    padding: '0.875rem 1.5rem',
-                    backgroundColor: copied ? '#10b981' : '#22c55e',
+                    padding: '1rem 2rem',
+                    background: copied 
+                      ? 'linear-gradient(135deg, #10b981, #059669)' 
+                      : 'linear-gradient(135deg, #22c55e, #16a34a)',
                     color: '#fff',
                     border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '14px',
+                    borderRadius: '12px',
+                    fontSize: '15px',
                     fontWeight: '600',
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
-                    boxShadow: '0 2px 4px rgba(34, 197, 94, 0.3)'
+                    boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
+                    transition: 'all 0.3s ease',
+                    letterSpacing: '-0.01em'
                   }}
                 >
-                  {copied ? '✓ Copied!' : '📋 Copy'}
+                  {copied ? '✓ Copied!' : '📋 Copy URL'}
                 </button>
               </div>
             </div>
@@ -382,93 +517,87 @@ export default function Home() {
           {/* Features Section */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '1.5rem',
-            marginTop: '3rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '2rem',
+            marginTop: '4rem'
           }}>
-            <div style={{
-              backgroundColor: '#fff',
-              padding: '2rem',
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-              border: '1px solid #e5e7eb'
-            }}>
-              <div style={{
-                fontSize: '2.5rem',
-                marginBottom: '1rem'
-              }}>⚡</div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                marginBottom: '0.5rem',
-                color: '#1f2937'
-              }}>
-                Fast & Reliable
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                fontSize: '0.9rem',
-                lineHeight: '1.6'
-              }}>
-                Built on Next.js and Vercel KV for lightning-fast performance and 99.9% uptime.
-              </p>
-            </div>
-
-            <div style={{
-              backgroundColor: '#fff',
-              padding: '2rem',
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-              border: '1px solid #e5e7eb'
-            }}>
-              <div style={{
-                fontSize: '2.5rem',
-                marginBottom: '1rem'
-              }}>🔒</div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                marginBottom: '0.5rem',
-                color: '#1f2937'
-              }}>
-                Secure & Private
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                fontSize: '0.9rem',
-                lineHeight: '1.6'
-              }}>
-                Your pastes are protected with XSS prevention and optional expiry for sensitive content.
-              </p>
-            </div>
-
-            <div style={{
-              backgroundColor: '#fff',
-              padding: '2rem',
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-              border: '1px solid #e5e7eb'
-            }}>
-              <div style={{
-                fontSize: '2.5rem',
-                marginBottom: '1rem'
-              }}>🎯</div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                marginBottom: '0.5rem',
-                color: '#1f2937'
-              }}>
-                Flexible Options
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                fontSize: '0.9rem',
-                lineHeight: '1.6'
-              }}>
-                Set time-based expiry or view limits to control how long your pastes are accessible.
-              </p>
-            </div>
+            {[
+              {
+                icon: '⚡',
+                title: 'Fast & Reliable',
+                description: 'Built on Next.js and Redis for lightning-fast performance and 99.9% uptime.',
+                gradient: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+                iconBg: 'linear-gradient(135deg, #f59e0b, #d97706)'
+              },
+              {
+                icon: '🔒',
+                title: 'Secure & Private',
+                description: 'Your pastes are protected with XSS prevention and optional expiry for sensitive content.',
+                gradient: 'linear-gradient(135deg, #dbeafe, #bfdbfe)',
+                iconBg: 'linear-gradient(135deg, #3b82f6, #2563eb)'
+              },
+              {
+                icon: '🎯',
+                title: 'Flexible Options',
+                description: 'Set time-based expiry or view limits to control how long your pastes are accessible.',
+                gradient: 'linear-gradient(135deg, #fce7f3, #fbcfe8)',
+                iconBg: 'linear-gradient(135deg, #ec4899, #db2777)'
+              }
+            ].map((feature, index) => (
+              <div 
+                key={index}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  padding: '2.5rem',
+                  borderRadius: '20px',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)'
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '16px',
+                  background: feature.iconBg,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '2rem',
+                  marginBottom: '1.5rem',
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)'
+                }}>
+                  {feature.icon}
+                </div>
+                <h3 style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  marginBottom: '0.75rem',
+                  color: '#1a1a1a',
+                  letterSpacing: '-0.01em'
+                }}>
+                  {feature.title}
+                </h3>
+                <p style={{
+                  color: '#6b7280',
+                  fontSize: '0.95rem',
+                  lineHeight: '1.7',
+                  fontWeight: '400'
+                }}>
+                  {feature.description}
+                </p>
+              </div>
+            ))}
           </div>
         </section>
       </main>
