@@ -30,10 +30,7 @@ export default function Header() {
           style={{
             fontSize: '1.75rem',
             fontWeight: '800',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
+            color: '#2D8CFF',
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
@@ -47,7 +44,7 @@ export default function Header() {
         >
           <span style={{ 
             fontSize: '2rem',
-            filter: hoveredLink === 'logo' ? 'drop-shadow(0 4px 8px rgba(102, 126, 234, 0.4))' : 'none',
+            filter: hoveredLink === 'logo' ? 'drop-shadow(0 4px 8px rgba(45, 140, 255, 0.4))' : 'none',
             transition: 'all 0.3s ease',
             transform: hoveredLink === 'logo' ? 'rotate(10deg) scale(1.1)' : 'rotate(0) scale(1)'
           }}>
@@ -63,7 +60,7 @@ export default function Header() {
           <Link 
             href="/" 
             style={{
-              color: hoveredLink === 'home' ? '#667eea' : '#4b5563',
+              color: hoveredLink === 'home' ? '#2D8CFF' : '#4A4A4A',
               fontSize: '1rem',
               fontWeight: '600',
               transition: 'all 0.3s ease',
@@ -84,7 +81,7 @@ export default function Header() {
                 left: 0,
                 right: 0,
                 height: '2px',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                background: '#2D8CFF',
                 borderRadius: '2px'
               }} />
             )}
@@ -94,7 +91,7 @@ export default function Header() {
             target="_blank" 
             rel="noopener noreferrer"
             style={{
-              color: hoveredLink === 'github' ? '#667eea' : '#4b5563',
+              color: hoveredLink === 'github' ? '#2D8CFF' : '#4A4A4A',
               fontSize: '1rem',
               fontWeight: '600',
               transition: 'all 0.3s ease',
@@ -123,7 +120,7 @@ export default function Header() {
                 left: 0,
                 right: 0,
                 height: '2px',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                background: '#2D8CFF',
                 borderRadius: '2px'
               }} />
             )}

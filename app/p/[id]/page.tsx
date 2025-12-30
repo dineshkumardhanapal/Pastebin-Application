@@ -54,7 +54,7 @@ export default async function PastePage({ params }: PageProps) {
   return (
     <div style={{ 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+      background: 'linear-gradient(135deg, #2D8CFF 0%, #1E6FD9 50%, #0D5FC7 100%)',
       backgroundAttachment: 'fixed',
       padding: '2rem 1rem'
     }}>
@@ -102,12 +102,12 @@ export default async function PastePage({ params }: PageProps) {
               width: '56px',
               height: '56px',
               borderRadius: '16px',
-              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              background: '#2D8CFF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '1.5rem',
-              boxShadow: '0 8px 16px rgba(102, 126, 234, 0.3)'
+              boxShadow: '0 8px 16px rgba(45, 140, 255, 0.3)'
             }}>
               📋
             </div>
@@ -187,14 +187,14 @@ export default async function PastePage({ params }: PageProps) {
               href="/"
               style={{
                 padding: '0.75rem 1.5rem',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                background: '#2D8CFF',
                 color: '#fff',
                 borderRadius: '10px',
                 fontSize: '0.95rem',
                 fontWeight: '600',
                 textDecoration: 'none',
                 transition: 'all 0.3s ease',
-                boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+                boxShadow: '0 4px 12px rgba(45, 140, 255, 0.3)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem'

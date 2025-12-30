@@ -109,7 +109,7 @@ export default function Home() {
       <main style={{ flex: 1 }}>
         {/* Hero Section */}
         <section style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+          background: 'linear-gradient(135deg, #2D8CFF 0%, #1E6FD9 50%, #0D5FC7 100%)',
           backgroundSize: '200% 200%',
           animation: 'gradient 15s ease infinite',
           color: '#fff',
@@ -193,7 +193,7 @@ export default function Home() {
               <div style={{
                 width: '4px',
                 height: '40px',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                background: '#2D8CFF',
                 borderRadius: '2px'
               }} />
               <div>
@@ -235,7 +235,7 @@ export default function Home() {
                   </label>
                   <span style={{
                     fontSize: '0.875rem',
-                    color: charCount > 0 ? '#667eea' : '#9ca3af',
+                    color: charCount > 0 ? '#2D8CFF' : '#9ca3af',
                     fontWeight: '500',
                     transition: 'color 0.2s ease'
                   }}>
@@ -391,8 +391,8 @@ export default function Home() {
                   width: '100%',
                   padding: '1.25rem',
                   background: loading 
-                    ? 'linear-gradient(135deg, #9ca3af, #6b7280)' 
-                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    ? '#9ca3af' 
+                    : '#2D8CFF',
                   color: '#fff',
                   border: 'none',
                   borderRadius: '12px',
@@ -401,7 +401,7 @@ export default function Home() {
                   cursor: loading ? 'not-allowed' : 'pointer',
                   boxShadow: loading 
                     ? 'none' 
-                    : '0 8px 24px rgba(102, 126, 234, 0.4)',
+                    : '0 8px 24px rgba(45, 140, 255, 0.3)',
                   letterSpacing: '-0.01em',
                   position: 'relative',
                   overflow: 'hidden'
@@ -526,22 +526,19 @@ export default function Home() {
                 icon: '⚡',
                 title: 'Fast & Reliable',
                 description: 'Built on Next.js and Redis for lightning-fast performance and 99.9% uptime.',
-                gradient: 'linear-gradient(135deg, #fef3c7, #fde68a)',
-                iconBg: 'linear-gradient(135deg, #f59e0b, #d97706)'
+                iconBg: '#2D8CFF'
               },
               {
                 icon: '🔒',
                 title: 'Secure & Private',
                 description: 'Your pastes are protected with XSS prevention and optional expiry for sensitive content.',
-                gradient: 'linear-gradient(135deg, #dbeafe, #bfdbfe)',
-                iconBg: 'linear-gradient(135deg, #3b82f6, #2563eb)'
+                iconBg: '#1E6FD9'
               },
               {
                 icon: '🎯',
                 title: 'Flexible Options',
                 description: 'Set time-based expiry or view limits to control how long your pastes are accessible.',
-                gradient: 'linear-gradient(135deg, #fce7f3, #fbcfe8)',
-                iconBg: 'linear-gradient(135deg, #ec4899, #db2777)'
+                iconBg: '#0D5FC7'
               }
             ].map((feature, index) => (
               <div 
@@ -575,7 +572,7 @@ export default function Home() {
                   justifyContent: 'center',
                   fontSize: '2rem',
                   marginBottom: '1.5rem',
-                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)'
+                  boxShadow: `0 8px 16px ${feature.iconBg}40`
                 }}>
                   {feature.icon}
                 </div>

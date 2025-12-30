@@ -1,3 +1,5 @@
+'use client'
+
 export default function Footer() {
   const currentYear = new Date().getFullYear()
   
@@ -76,7 +78,13 @@ export default function Footer() {
                   href="https://github.com/dineshkumardhanapal/Pastebin-Application" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  style={{ color: '#9ca3af', textDecoration: 'underline' }}
+                  style={{ 
+                    color: '#9ca3af', 
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#2D8CFF'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
                 >
                   Source Code
                 </a>
@@ -85,7 +93,13 @@ export default function Footer() {
                 <a 
                   href="/api/healthz" 
                   target="_blank"
-                  style={{ color: '#9ca3af', textDecoration: 'underline' }}
+                  style={{ 
+                    color: '#9ca3af', 
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#2D8CFF'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
                 >
                   API Health
                 </a>
@@ -101,7 +115,7 @@ export default function Footer() {
           fontSize: '0.9rem'
         }}>
           <p>
-            © {currentYear} Pastebin Application. Built with Next.js and Vercel KV.
+            © {currentYear} Pastebin Application. Built with Next.js and Redis.
           </p>
         </div>
       </div>
