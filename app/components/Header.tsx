@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { HiOutlineClipboard, HiOutlineHome, HiOutlineArrowTopRightOnSquare } from 'react-icons/hi2'
+import { HiOutlineClipboard, HiOutlineArrowTopRightOnSquare } from 'react-icons/hi2'
 
 export default function Header() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
